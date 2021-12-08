@@ -45,7 +45,8 @@ namespace UploadNvalidateFiles.Controllers
                         lineNumber++;
                         StringBuilder accountName = new StringBuilder();
                         StringBuilder accountNumber = new StringBuilder();
-                        Regex regexAccountNumber = new Regex("^[0-9]{7}[p]{0,1}$");                        
+                        Regex regexAccountNumber = new Regex("^[0-9]{7}[p]{0,1}$");
+                        Regex regexAccountName = new Regex("^[A-Z][a-z]{1,50}$"); 
 
                         char[] b = new char[line.Length];
                         b = line.ToCharArray();
@@ -65,10 +66,16 @@ namespace UploadNvalidateFiles.Controllers
                                 count++;
                             }
                         }
-                        bool result = regexAccountNumber.IsMatch(accountNumber.ToString());
-                        if (!result)
+                        bool resultAccountName = regexAccountName.IsMatch(accountName.ToString());
+                        if (!resultAccountName)
                         {
-                            messages.Append("Account number -" + "not valid for " + lineNumber + " line " + lineData + " " + Environment.NewLine);
+                            messages.Append("Account name -" + "not valid for " + lineNumber + " line " + @"'" + lineData + @"'" +  " " + Environment.NewLine);
+                        }
+
+                        bool resultAccountNumber = regexAccountNumber.IsMatch(accountNumber.ToString());
+                        if (!resultAccountNumber)
+                        {
+                            messages.Append("Account number -" + "not valid for " + lineNumber + " line " + @"'" + lineData + @"'" + " " + Environment.NewLine);
                         }
                     }
 
