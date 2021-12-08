@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace UploadNvalidateFiles.Controllers
 {
@@ -36,10 +37,15 @@ namespace UploadNvalidateFiles.Controllers
                     }
                     string[] lines = System.IO.File.ReadAllLines(path);
                     StringBuilder messages = new StringBuilder();
+                    int lineNumber = 0;
+                    string lineData = string.Empty;
                     foreach (string line in lines)
                     {
+                        lineData = line;
+                        lineNumber++;
                         StringBuilder accountName = new StringBuilder();
                         StringBuilder accountNumber = new StringBuilder();
+                        Regex regexAccountNumber = new Regex("^[0-9]{7}[p]{0,1}$");                        
 
                         char[] b = new char[line.Length];
                         b = line.ToCharArray();
@@ -59,15 +65,16 @@ namespace UploadNvalidateFiles.Controllers
                                 count++;
                             }
                         }
-                        if (accountNumber.Length > 8)
+                        bool result = regexAccountNumber.IsMatch(accountNumber.ToString());
+                        if (!result)
                         {
-                            messages.Append(accountNumber.ToString() + " ");
+                            messages.Append("Account number -" + "not valid for " + lineNumber + " line " + lineData + " " + Environment.NewLine);
                         }
                     }
 
                     if (messages.Length > 0)
                     {
-                        return BadRequest("Invalid Accounts : " + messages);
+                        return BadRequest("" + messages);
                     }
                 }
                 catch (Exception e)
