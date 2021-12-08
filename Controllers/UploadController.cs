@@ -81,7 +81,7 @@ namespace UploadNvalidateFiles.Controllers
 
                     if (messages.Length > 0)
                     {
-                        return BadRequest("" + messages);
+                        return BadRequest("{ fileValid: false," + Environment.NewLine + "invalidLines:[" + Environment.NewLine + messages + Environment.NewLine + "]}");
                     }
                 }
                 catch (Exception e)
@@ -94,7 +94,7 @@ namespace UploadNvalidateFiles.Controllers
                 return BadRequest(new { message = "Invalid file extension" });
             }
 
-            return Ok(new { message = "File uploaded successfully" });
+            return Ok(new { message = "{ fileValid:  true, it's uploaded successfully. }" });
         }
 
         /// <summary>
